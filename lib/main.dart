@@ -11,7 +11,6 @@ void main() {
   ).then((_) => runApp(const MyApp()));
 }
 
-
 const _loginGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
@@ -22,7 +21,7 @@ const _loginGradient = LinearGradient(
   ],
 );
 
-
+// Warna halaman Register (hijau teal)
 const _registerGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
@@ -51,7 +50,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Tampil LoginPage atau HomePage tergantung status login
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
@@ -80,6 +78,7 @@ class AuthGate extends StatelessWidget {
   }
 }
 
+/// Ubah error Firebase jadi pesan yang gampang dibaca
 String _errorText(Object error) {
   if (error is FirebaseAuthException) {
     switch (error.code) {
@@ -137,7 +136,6 @@ void _showSnack(BuildContext context, String message, {Color? color}) {
     );
 }
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -161,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() {
-   
+    // Cek isian dulu, kalau kosong / salah format ga dikirim ke Firebase
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _loading = true);
@@ -382,6 +380,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -414,6 +413,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() => _loading = true);
 
+    // Ambil navigator dulu sebelum proses async
     final navigator = Navigator.of(context);
     final name = _nameController.text.trim();
 
@@ -425,7 +425,8 @@ class _RegisterPageState extends State<RegisterPage> {
         .then((cred) => cred.user?.updateDisplayName(name))
         .then(
           (_) {
-            
+            // Akun jadi & otomatis login, tutup halaman register
+            // supaya kebuka HomePage
             navigator.pop();
           },
           onError: (e) {
@@ -455,7 +456,6 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Header gradient
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 0, 24, 32),
@@ -509,7 +509,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
 
-          // Form
+          
           Expanded(
             child: Center(
               child: SingleChildScrollView(
