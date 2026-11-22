@@ -11,6 +11,7 @@ void main() {
   ).then((_) => runApp(const MyApp()));
 }
 
+
 const _loginGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
@@ -21,7 +22,7 @@ const _loginGradient = LinearGradient(
   ],
 );
 
-// Warna halaman Register (hijau teal)
+
 const _registerGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
@@ -32,6 +33,44 @@ const _registerGradient = LinearGradient(
 );
 
 const _tealColor = Color(0xFF0F766E);
+
+const _schoolImage = 'assets/images/sekolah.jpg';
+
+
+const _overlayGradient = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    Color.fromRGBO(30, 27, 75, 0.55),
+    Color.fromRGBO(0, 0, 0, 0.70),
+  ],
+);
+
+class SchoolBackground extends StatelessWidget {
+  final Widget child;
+
+  const SchoolBackground({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          _schoolImage,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => const DecoratedBox(
+            decoration: BoxDecoration(gradient: _loginGradient),
+          ),
+        ),
+        const DecoratedBox(
+          decoration: BoxDecoration(gradient: _overlayGradient),
+        ),
+        child,
+      ],
+    );
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -60,8 +99,7 @@ class AuthGate extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: DecoratedBox(
-              decoration: BoxDecoration(gradient: _loginGradient),
+            body: SchoolBackground(
               child: Center(
                 child: CircularProgressIndicator(color: Colors.white),
               ),
@@ -78,7 +116,7 @@ class AuthGate extends StatelessWidget {
   }
 }
 
-/// Ubah error Firebase jadi pesan yang gampang dibaca
+
 String _errorText(Object error) {
   if (error is FirebaseAuthException) {
     switch (error.code) {
@@ -159,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() {
-    // Cek isian dulu, kalau kosong / salah format ga dikirim ke Firebase
+
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _loading = true);
@@ -220,10 +258,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(gradient: _loginGradient),
+      body: SchoolBackground(
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -413,7 +448,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() => _loading = true);
 
-    // Ambil navigator dulu sebelum proses async
+   
     final navigator = Navigator.of(context);
     final name = _nameController.text.trim();
 
@@ -425,8 +460,7 @@ class _RegisterPageState extends State<RegisterPage> {
         .then((cred) => cred.user?.updateDisplayName(name))
         .then(
           (_) {
-            // Akun jadi & otomatis login, tutup halaman register
-            // supaya kebuka HomePage
+            
             navigator.pop();
           },
           onError: (e) {
@@ -456,6 +490,7 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
+          
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 0, 24, 32),
@@ -509,7 +544,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
 
-          
+         
           Expanded(
             child: Center(
               child: SingleChildScrollView(
@@ -675,10 +710,7 @@ class HomePage extends StatelessWidget {
     final initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(gradient: _loginGradient),
+      body: SchoolBackground(
         child: SafeArea(
           child: Center(
             child: Padding(
